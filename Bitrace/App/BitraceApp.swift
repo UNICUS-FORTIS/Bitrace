@@ -11,7 +11,7 @@ import SwiftUI
 struct BitraceApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainView()
         }
     }
 }
