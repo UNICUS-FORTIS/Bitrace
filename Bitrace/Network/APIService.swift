@@ -11,6 +11,7 @@ import Moya
 enum APIService {
     
     case loadMarkets(warning: Bool)
+    case ticker(market: String)
 
 
 }
@@ -25,6 +26,10 @@ extension APIService: TargetType {
             
         case .loadMarkets:
             return Path.marketCodes
+            
+        case .ticker:
+            return Path.ticker
+            
         }
         
     }
@@ -33,7 +38,8 @@ extension APIService: TargetType {
         
         switch self {
             
-        case .loadMarkets:
+        case .loadMarkets,
+                .ticker:
             return .get
         }
         
@@ -45,6 +51,10 @@ extension APIService: TargetType {
             
         case .loadMarkets(let isWarning):
             return .requestParameters(parameters: ["isDetails": isWarning], encoding: URLEncoding.queryString)
+            
+        case .ticker(let market):
+            return .requestParameters(parameters: ["markets": market],
+                                      encoding: URLEncoding.queryString)
         }
         
     }
@@ -56,6 +66,10 @@ extension APIService: TargetType {
         case .loadMarkets:
             
             ["Content-Type": "application/json"]
+            
+        case .ticker:
+            
+            ["accept": "application/json"]
             
         }
         
