@@ -9,8 +9,10 @@ import SwiftUI
 
 struct MainView: View {
     
+    @ObservedObject private var viewModel = MainViewModel()
+    
     var body: some View {
-        
+        NavigationView {
             VStack {
                 
                 HStack {
@@ -18,6 +20,7 @@ struct MainView: View {
                         .font(.largeTitle)
                         .bold()
                         .padding(.leading)
+                        .foregroundStyle(.main)
                     
                     Spacer()
                     
@@ -48,16 +51,18 @@ struct MainView: View {
                            alignment: .leading)
                     .padding(.horizontal)
                     .padding(.bottom, 12)
-
+                
                 ScrollView {
-                    coinListView()
+                    MarketListView(viewModel: self.viewModel)
+                        .onAppear {
+                            viewModel.fetchCoinMarket()
+                        }
                 }
                 
             }
             .scrollIndicators(.hidden)
-            .navigationTitle("Bitrace")
-            .navigationBarTitleTextColor(.main)
         }
+    }
 }
 
 #Preview {
