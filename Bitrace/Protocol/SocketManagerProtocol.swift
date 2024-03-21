@@ -24,9 +24,7 @@ protocol SocketManagerProtocol: AnyObject {
 extension SocketManagerProtocol where Self: URLSessionWebSocketDelegate {
     
     func openWebSocket() {
-        
-        closeWebSocket()
-        
+                
         guard let url = URL(string: EndPoints.socketURL) else { return }
         let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         webSocket = session.webSocketTask(with: url)
