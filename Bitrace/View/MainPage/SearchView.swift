@@ -10,21 +10,24 @@ import SwiftUI
 struct SearchView: View {
     
     @StateObject var viewModel: MainViewModel
+    @StateObject var marketViewModel = MarketTickerViewModel.shared
     @State private var searchTerm = ""
     @Binding var isSearching: Bool
     
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack {
+                LazyVStack {
                     ForEach(filteredCoinMarketArray, id: \.self) { item in
-                        NavigationLink(destination: DetailView(coinMarketModel: item)) {
+                        NavigationLink(destination: MarketTickerView(market: item,
+                                                                     viewModel: marketViewModel)) {
                             MarketItemView(item: item)
                         }
                     }
                 }
+                .padding()
+                .navigationBarTitleDisplayMode(.inline)
             }
-            .padding()
         }
         .searchable(text: $searchTerm, isPresented: $isSearching)
         .navigationTitle("Market Search")
