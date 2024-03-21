@@ -46,14 +46,19 @@ final class MarketTickerViewModel: ObservableObject {
                 self.low = String(data.lowPrice.formatted(.number))
                 self.change = data.change
                 self.changePrice = String(data.signedChangePrice.formatted(.number))
-                self.changePercentage = "\((data.signedChangeRate * 100).formatted(.number))%"
+                self.changePercentage = "\((data.signedChangeRate * 100).formatted(.number.precision(.fractionLength(2))))%"
             }
             .store(in: &cancellable)
     }
     
     func closeWebSocket() {
-        TickerSocketManager.shared.closeWebSocket()
         currentPrice = ""
         currentMarket = ""
+        high = ""
+        low = ""
+        change = ""
+        changePrice = ""
+        changePercentage = ""
+        TickerSocketManager.shared.closeWebSocket()
     }
 }
