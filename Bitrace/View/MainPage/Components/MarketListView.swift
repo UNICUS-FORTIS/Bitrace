@@ -11,12 +11,14 @@ import SwiftUI
 struct MarketListView: View {
     
     @StateObject var viewModel: MainViewModel
+    @StateObject var marketViewModel = MarketTickerViewModel.shared
     
     var body: some View {
         
         LazyVStack(spacing: 10) {
             ForEach(viewModel.coinMarketArray, id: \.self) { item in
-                NavigationLink(destination: DetailView(coinMarketModel: item)) {
+                NavigationLink(destination: MarketTickerView(market: item,
+                                                             viewModel: marketViewModel)) {
                     MarketItemView(item: item)
                 }
             }
@@ -24,4 +26,3 @@ struct MarketListView: View {
         .padding()
     }
 }
-
