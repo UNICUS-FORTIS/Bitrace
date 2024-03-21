@@ -56,12 +56,12 @@ struct MainView: View {
                     .frame(height: 200)
                     .padding(.vertical)
                     .onAppear {
-//                            viewModel.fetchTicker(market: "KRW-BTC")
+                        viewModel.fetchTicker(market: "KRW-BTC")
                     }
             }
             .frame(height: 230)
             .refreshable {
-//                    viewModel.fetchTicker(market: "KRW-BTC")
+                viewModel.fetchTicker(market: "KRW-BTC")
             }
             
             Text("Market")
@@ -76,10 +76,9 @@ struct MainView: View {
             ScrollView {
                 MarketListView(viewModel: self.viewModel)
                     .onAppear {
-                            viewModel.fetchCoinMarket()
+                        viewModel.fetchCoinMarket()
                     }
             }
-            
         }
         .scrollIndicators(.hidden)
     }
