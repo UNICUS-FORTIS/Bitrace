@@ -18,7 +18,7 @@ struct MarketTickerView: View {
         VStack {
             HStack {
                 Text(market.koreanName)
-                    .font(.system(size: 36))
+                    .font(.title)
                     .bold()
                 
                 Text(market.market)
@@ -27,25 +27,28 @@ struct MarketTickerView: View {
                     .padding(.top)
                 
                 Spacer()
-                
-                VStack(alignment: .center) {
-                    HStack {
-                        Text("고가")
-                            .font(.caption)
-                        Text(viewModel.high)
-                            .font(.caption)
-                    }
-                    Divider()
-                    HStack {
-                        Text("저가")
-                            .font(.caption)
-                        Text(viewModel.low)
-                            .font(.caption)
-                    }
-                }
             }
             .frame(maxHeight: 50)
             .foregroundStyle(.main)
+                        
+            VStack(alignment: .leading) {
+                HStack {
+                    Text("고가")
+                        .font(.caption)
+                    Text(viewModel.high)
+                        .font(.caption)
+                    Spacer()
+                }
+
+
+                HStack {
+                    Text("저가")
+                        .font(.caption)
+                    Text(viewModel.low)
+                        .font(.caption)
+                    Spacer()
+                }
+            }
             
             Divider()
             
@@ -54,17 +57,14 @@ struct MarketTickerView: View {
                     .font(.title)
                     .bold()
                     .foregroundStyle(priceColor())
-                    .frame(minWidth: UIScreen.main.bounds.width / 2)
-                    .alignmentGuide(.leading, computeValue: { dimension in
-                        dimension[.leading]
-                    })
+                
+                Spacer()
 
                 VStack(alignment: .center) {
                     HStack {
                         Text(viewModel.changePrice)
                             .font(.caption)
                             .foregroundStyle(priceColor())
-
                     }
                     
                     Divider()
@@ -75,6 +75,7 @@ struct MarketTickerView: View {
                             .foregroundStyle(priceColor())
                     }
                 }
+                .frame(maxWidth: UIScreen.main.bounds.width / 3)
             }
             
             ScrollView {
