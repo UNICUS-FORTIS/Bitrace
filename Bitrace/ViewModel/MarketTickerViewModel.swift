@@ -27,9 +27,6 @@ final class MarketTickerViewModel: ObservableObject {
     
     func startSocket(market: CoinMarketModel) {
         
-        TickerSocketManager.shared.openWebSocket()
-        TickerSocketManager.shared.send()
-        
         let builder = TickerSocketJSONBuilder(item: market)
         
         TickerSocketManager.shared.jsonBuilder = builder

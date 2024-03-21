@@ -43,7 +43,7 @@ extension SocketManagerProtocol where Self: URLSessionWebSocketDelegate {
     }
     
     func ping() {
-        timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true, block: { [weak self] _ in
             self?.webSocket?.sendPing(pongReceiveHandler: { error in
                 if let error {
                     print("핑퐁 에러 ", error)
