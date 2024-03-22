@@ -13,15 +13,17 @@ struct MarketListView: View {
     @StateObject var viewModel: MainViewModel
     @StateObject var marketViewModel = MarketTickerViewModel.shared
     @StateObject var chartViewModel = ChartViewModel.shared
+    @StateObject var orderBookViewModel = OrderBookViewModel.shared
     
     var body: some View {
         
         LazyVStack(spacing: 10) {
             ForEach(viewModel.coinMarketArray, id: \.self) { item in
-                NavigationLink(destination: 
+                NavigationLink(destination:
                                 MarketTickerView(market: item,
                                                  ticker: marketViewModel,
-                                                 chart: chartViewModel)) {
+                                                 chart: chartViewModel,
+                                                 order: orderBookViewModel)) {
                     MarketItemView(item: item)
                 }
             }

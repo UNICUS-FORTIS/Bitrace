@@ -45,7 +45,6 @@ struct MainView: View {
                         .frame(maxWidth: 25, maxHeight: 25)
                         .padding(.trailing)
                 }
-                
             }
             .frame(maxWidth: .infinity)
             .frame(maxHeight: 30)

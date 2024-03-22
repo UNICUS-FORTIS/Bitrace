@@ -12,6 +12,8 @@ struct SearchView: View {
     @StateObject var viewModel: MainViewModel
     @StateObject var marketViewModel = MarketTickerViewModel.shared
     @StateObject var chartViewModel = ChartViewModel.shared
+    @StateObject var orderBookViewModel = OrderBookViewModel.shared
+    
     @State private var searchTerm = ""
     @Binding var isSearching: Bool
     
@@ -23,7 +25,8 @@ struct SearchView: View {
                         NavigationLink(destination:
                                         MarketTickerView(market: item,
                                                          ticker: marketViewModel,
-                                                         chart: chartViewModel)) {
+                                                         chart: chartViewModel,
+                                                         order: orderBookViewModel)) {
                             MarketItemView(item: item)
                         }
                     }
