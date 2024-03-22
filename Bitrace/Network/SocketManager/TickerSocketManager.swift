@@ -18,17 +18,16 @@ final class TickerSocketManager: NSObject {
     var timer: Timer?
     var isOpen = false
     
-    var jsonBuilder: TickerSocketJSONBuilder?
+    var jsonBuilder: SocketJsonBuilder?
     var dataObject = PassthroughSubject<TickerSocketResponse, Never>()
 }
 
 extension TickerSocketManager: SocketManagerProtocol {
     
     func send() {
-        guard let json = jsonBuilder?.build() else { return }
-        
-        print(json)
-        
+        guard let json = jsonBuilder?.build(ticket: "test example",
+                                            type: "ticker",
+                                            level: nil) else { return }
         webSocket?.send(.string(json), completionHandler: { error in
             if let error {
                 print("send error, \(error)")
@@ -47,11 +46,9 @@ extension TickerSocketManager: SocketManagerProtocol {
                         
                         if let decodedData = try? JSONDecoder().decode(TickerSocketResponse.self, from: data) {
                             self?.dataObject.send(decodedData)
-                            print(decodedData)
                         }
                         
-                    case .string(let string):
-                        print(string)
+                    case .string(_): break
                         
                     @unknown default: print("unknown error")
                         
