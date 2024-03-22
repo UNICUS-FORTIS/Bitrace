@@ -31,19 +31,5 @@ struct CoinMarketModel:Hashable, Decodable {
 
 struct MarketEvent: Decodable {
     let warning: Bool
-    let caution: Caution
-}
-
-struct Caution: Decodable {
-    let priceFluctuations, tradingVolumeSoaring, depositAmountSoaring, globalPriceDifferences: Bool
-    let concentrationOfSmallAccounts: Bool
-    
-    enum CodingKeys: String, CodingKey {
-        case priceFluctuations = "PRICE_FLUCTUATIONS"
-        case tradingVolumeSoaring = "TRADING_VOLUME_SOARING"
-        case depositAmountSoaring = "DEPOSIT_AMOUNT_SOARING"
-        case globalPriceDifferences = "GLOBAL_PRICE_DIFFERENCES"
-        case concentrationOfSmallAccounts = "CONCENTRATION_OF_SMALL_ACCOUNTS"
-    }
 }
 
