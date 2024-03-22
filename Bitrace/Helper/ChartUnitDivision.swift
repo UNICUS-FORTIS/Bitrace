@@ -11,12 +11,12 @@ import Foundation
 enum ChartUnitDivision: String, CaseIterable {
 
     case oneMinute = "1분"
-    case fiveMinute = "3분"
+    case fiveMinute = "5분"
     case tenMinute = "10분"
     case halfHour = "30분"
     case oneHour = "60분"
     
-    var unitRawValue: Int {
+    var unitRawValue: Int32 {
         
         switch self {
         case .oneMinute:
