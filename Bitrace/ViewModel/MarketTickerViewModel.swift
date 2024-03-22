@@ -14,20 +14,20 @@ final class MarketTickerViewModel: ObservableObject {
     static let shared = MarketTickerViewModel()
     private init() { }
     
-    @Published
-    var currentPrice: String = ""
-    var currentMarket: String = ""
-    var high: String = ""
-    var low: String = ""
-    var change: String = ""
-    var changePrice: String = ""
-    var changePercentage: String = ""
+    
+    @Published var currentPrice: String = ""
+    @Published var currentMarket: String = ""
+    @Published var high: String = ""
+    @Published var low: String = ""
+    @Published var change: String = ""
+    @Published var changePrice: String = ""
+    @Published var changePercentage: String = ""
     
     private var cancellable = Set<AnyCancellable>()
     
     func startSocket(market: CoinMarketModel) {
         
-        let builder = TickerSocketJSONBuilder(item: market)
+        let builder = SocketJsonBuilder(item: market)
         
         TickerSocketManager.shared.jsonBuilder = builder
         TickerSocketManager.shared.openWebSocket()
