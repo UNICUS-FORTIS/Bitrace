@@ -11,6 +11,7 @@ struct SearchView: View {
     
     @StateObject var viewModel: MainViewModel
     @StateObject var marketViewModel = MarketTickerViewModel.shared
+    @StateObject var chartViewModel = ChartViewModel.shared
     @State private var searchTerm = ""
     @Binding var isSearching: Bool
     
@@ -19,8 +20,10 @@ struct SearchView: View {
             ScrollView {
                 LazyVStack {
                     ForEach(filteredCoinMarketArray, id: \.self) { item in
-                        NavigationLink(destination: MarketTickerView(market: item,
-                                                                     viewModel: marketViewModel)) {
+                        NavigationLink(destination:
+                                        MarketTickerView(market: item,
+                                                         ticker: marketViewModel,
+                                                         chart: chartViewModel)) {
                             MarketItemView(item: item)
                         }
                     }
