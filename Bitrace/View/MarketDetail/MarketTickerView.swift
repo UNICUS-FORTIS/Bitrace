@@ -11,7 +11,8 @@ struct MarketTickerView: View {
     
     @State var market: CoinMarketModel
     @State var selectedUnit: ChartUnitDivision = .oneMinute
-    @ObservedObject var viewModel: MarketTickerViewModel
+    @ObservedObject var ticker: MarketTickerViewModel
+    @ObservedObject var chart: ChartViewModel
     @Namespace private var animation
     
     var body: some View {
@@ -35,7 +36,7 @@ struct MarketTickerView: View {
                 HStack {
                     Text("고가")
                         .font(.caption)
-                    Text(viewModel.high)
+                    Text(ticker.high)
                         .font(.caption)
                     Spacer()
                 }
@@ -44,7 +45,7 @@ struct MarketTickerView: View {
                 HStack {
                     Text("저가")
                         .font(.caption)
-                    Text(viewModel.low)
+                    Text(ticker.low)
                         .font(.caption)
                     Spacer()
                 }
@@ -53,7 +54,7 @@ struct MarketTickerView: View {
             Divider()
             
             HStack {
-                Text(viewModel.currentPrice)
+                Text(ticker.currentPrice)
                     .font(.title)
                     .bold()
                     .foregroundStyle(priceColor())
@@ -62,7 +63,7 @@ struct MarketTickerView: View {
 
                 VStack(alignment: .center) {
                     HStack {
-                        Text(viewModel.changePrice)
+                        Text(ticker.changePrice)
                             .font(.caption)
                             .foregroundStyle(priceColor())
                     }
@@ -70,7 +71,7 @@ struct MarketTickerView: View {
                     Divider()
 
                     HStack {
-                        Text(viewModel.changePercentage)
+                        Text(ticker.changePercentage)
                             .font(.caption)
                             .foregroundStyle(priceColor())
                     }
@@ -81,18 +82,21 @@ struct MarketTickerView: View {
             ScrollView {
                 VStack {
                     animate()
-                    ChartView(unitInfo: 1)
+                    ChartView()
                         .frame(width: .infinity, height: UIScreen.main.bounds.height * 0.3)
+                        .onAppear {
+                            chart.fetchCandle(item: market, unit: selectedUnit.unitRawValue)
+                        }
                 }
             }
             Spacer()
         }
         .padding()
         .onAppear {
-            viewModel.startSocket(market: market)
+            ticker.startSocket(market: market)
         }
         .onDisappear {
-            viewModel.closeWebSocket()
+            ticker.closeWebSocket()
         }
     }
     
@@ -115,6 +119,7 @@ struct MarketTickerView: View {
                 .onTapGesture {
                     withAnimation(.easeInOut) {
                         self.selectedUnit = item
+                        chart.fetchCandle(item: market, unit: selectedUnit.unitRawValue)
                     }
                 }
             }
@@ -122,7 +127,7 @@ struct MarketTickerView: View {
     }
     
     func priceColor() -> Color {
-        switch viewModel.change {
+        switch ticker.change {
         case "RISE":
             return .red
         case "EVEN":

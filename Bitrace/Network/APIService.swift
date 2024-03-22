@@ -12,8 +12,8 @@ enum APIService {
     
     case loadMarkets(warning: Bool)
     case ticker(market: String)
-
-
+    case candle(unit: Int32, query: CandleRequest)
+    
 }
 
 extension APIService: TargetType {
@@ -30,6 +30,9 @@ extension APIService: TargetType {
         case .ticker:
             return Path.ticker
             
+        case .candle(let unit, _):
+            return Path.candle+"\(unit)"
+            
         }
         
     }
@@ -39,7 +42,8 @@ extension APIService: TargetType {
         switch self {
             
         case .loadMarkets,
-                .ticker:
+                .ticker,
+                .candle:
             return .get
         }
         
@@ -55,6 +59,13 @@ extension APIService: TargetType {
         case .ticker(let market):
             return .requestParameters(parameters: ["markets": market],
                                       encoding: URLEncoding.queryString)
+            
+        case .candle(_, let query):
+            let parameters: [String: Any] = [
+                "market": query.market,
+                "count": query.count
+            ]
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.queryString)
         }
         
     }
@@ -67,7 +78,8 @@ extension APIService: TargetType {
             
             ["Content-Type": "application/json"]
             
-        case .ticker:
+        case .ticker,
+                .candle:
             
             ["accept": "application/json"]
             
