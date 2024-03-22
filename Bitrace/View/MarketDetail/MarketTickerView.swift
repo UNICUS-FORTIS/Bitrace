@@ -11,8 +11,11 @@ struct MarketTickerView: View {
     
     @State var market: CoinMarketModel
     @State var selectedUnit: ChartUnitDivision = .oneMinute
+    @State var selectedOrder: OrderBookDivision = .ask
+    
     @ObservedObject var ticker: MarketTickerViewModel
     @ObservedObject var chart: ChartViewModel
+    @ObservedObject var order: OrderBookViewModel
     @Namespace private var animation
     
     var body: some View {
@@ -40,7 +43,6 @@ struct MarketTickerView: View {
                         .font(.caption)
                     Spacer()
                 }
-
 
                 HStack {
                     Text("저가")
@@ -81,26 +83,34 @@ struct MarketTickerView: View {
             
             ScrollView {
                 VStack {
-                    animate()
+                    chartTabMenu()
                     ChartView()
                         .frame(width: .infinity, height: UIScreen.main.bounds.height * 0.3)
                         .onAppear {
                             chart.fetchCandle(item: market, unit: selectedUnit.unitRawValue)
                         }
+                        .padding(.bottom, 12)
+                    
+                    orderBookTabMenu()
+                    OrderBookView(selectedOrder: $selectedOrder)
+                        .frame(width: .infinity, height: UIScreen.main.bounds.height * 0.5)
                 }
             }
             Spacer()
         }
         .padding()
+        .scrollIndicators(.hidden)
         .onAppear {
             ticker.startSocket(market: market)
+            order.startSocket(market: market)
         }
         .onDisappear {
             ticker.closeWebSocket()
+            order.closeWebSocket()
         }
     }
     
-    private func animate() -> some View {
+    private func chartTabMenu() -> some View {
         HStack {
             ForEach(ChartUnitDivision.allCases, id: \.self) { item in
                 VStack {
@@ -120,6 +130,31 @@ struct MarketTickerView: View {
                     withAnimation(.easeInOut) {
                         self.selectedUnit = item
                         chart.fetchCandle(item: market, unit: selectedUnit.unitRawValue)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func orderBookTabMenu() -> some View {
+        HStack {
+            ForEach(OrderBookDivision.allCases, id: \.self) { item in
+                VStack {
+                    Text(item.rawValue)
+                        .font(.title3)
+                        .frame(maxWidth: .infinity/2, minHeight: 30)
+                        .foregroundColor(selectedOrder == item ? .black : .gray)
+                    
+                    if selectedOrder == item {
+                        Capsule()
+                            .foregroundColor(.black)
+                            .frame(height: 3)
+                            .matchedGeometryEffect(id: "order", in: animation)
+                    }
+                }
+                .onTapGesture {
+                    withAnimation(.easeInOut) {
+                        self.selectedOrder = item
                     }
                 }
             }
