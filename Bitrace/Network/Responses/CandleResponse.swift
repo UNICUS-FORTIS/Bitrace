@@ -12,7 +12,7 @@ struct CandleResponse: Identifiable, Decodable {
     
     let id = UUID().uuidString
     let market, candleDateTimeUTC, candleDateTimeKst: String
-    let openingPrice, highPrice, lowPrice, tradePrice: Int
+    let openingPrice, highPrice, lowPrice, tradePrice: Double
     let timestamp: Int
     let candleAccTradePrice, candleAccTradeVolume: Double
     let unit: Int

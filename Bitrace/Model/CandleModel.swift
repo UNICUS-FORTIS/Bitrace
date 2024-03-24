@@ -11,10 +11,10 @@ import Foundation
 struct CandleModel: Identifiable, Comparable {
     let id = UUID().uuidString
     let time: String
-    let high: Int
-    let low: Int
-    let openPrice: Int
-    let tradePrice: Int
+    let high: Double
+    let low: Double
+    let openPrice: Double
+    let tradePrice: Double
     
     static func < (lhs: CandleModel, rhs: CandleModel) -> Bool {
         return lhs.time < rhs.time

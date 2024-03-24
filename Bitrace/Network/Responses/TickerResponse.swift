@@ -18,12 +18,7 @@ struct TickerResponse: Decodable {
     let changePrice: Int
     let changeRate: Double
     let signedChangePrice: Int
-    let signedChangeRate, tradeVolume, accTradePrice, accTradePrice24H: Double
-    let accTradeVolume, accTradeVolume24H: Double
-    let highest52_WeekPrice: Int
-    let highest52_WeekDate: String
-    let lowest52_WeekPrice: Int
-    let lowest52_WeekDate: String
+    let signedChangeRate: Double
     let timestamp: Int
 
     enum CodingKeys: String, CodingKey {
@@ -43,15 +38,6 @@ struct TickerResponse: Decodable {
         case changeRate = "change_rate"
         case signedChangePrice = "signed_change_price"
         case signedChangeRate = "signed_change_rate"
-        case tradeVolume = "trade_volume"
-        case accTradePrice = "acc_trade_price"
-        case accTradePrice24H = "acc_trade_price_24h"
-        case accTradeVolume = "acc_trade_volume"
-        case accTradeVolume24H = "acc_trade_volume_24h"
-        case highest52_WeekPrice = "highest_52_week_price"
-        case highest52_WeekDate = "highest_52_week_date"
-        case lowest52_WeekPrice = "lowest_52_week_price"
-        case lowest52_WeekDate = "lowest_52_week_date"
         case timestamp
     }
 }

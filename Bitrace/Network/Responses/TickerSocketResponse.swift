@@ -9,10 +9,10 @@ import Foundation
 
 struct TickerSocketResponse: Decodable {
     let type, code: String
-    let openingPrice, highPrice, lowPrice, tradePrice: Int
-    let prevClosingPrice: Int
+    let openingPrice, highPrice, lowPrice, tradePrice: Double
+    let prevClosingPrice: Double
     let change: String
-    let signedChangePrice: Int
+    let signedChangePrice: Double
     let signedChangeRate: Double
     
     enum CodingKeys: String, CodingKey {

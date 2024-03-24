@@ -13,23 +13,16 @@ struct CoinMarketModel:Hashable, Decodable {
         return lhs.market == rhs.market
     }    
     
-    let market, koreanName, englishName, marketWarning: String
-    let marketEvent: MarketEvent
+    let market, koreanName, englishName: String
     
     enum CodingKeys: String, CodingKey {
         case market
         case koreanName = "korean_name"
         case englishName = "english_name"
-        case marketWarning = "market_warning"
-        case marketEvent = "market_event"
     }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(market)
     }
-}
-
-struct MarketEvent: Decodable {
-    let warning: Bool
 }
 
