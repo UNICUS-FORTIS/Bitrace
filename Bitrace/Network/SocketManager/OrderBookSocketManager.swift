@@ -49,7 +49,7 @@ extension OrderBookSocketManager: SocketManagerProtocol {
                             self?.orderBookObject.send(decodedData)
                         }
                         
-                    case .string(let string): break
+                    case .string(_): break
                         
                     @unknown default: print("unknown error")
                     }
