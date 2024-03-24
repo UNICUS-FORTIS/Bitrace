@@ -52,6 +52,12 @@ struct FavoriteView: View {
                     Text(item.koreanName)
                         .foregroundStyle(.white)
                         .bold()
+                    
+                    Text(item.market)
+                        .foregroundStyle(.white)
+                        .font(.caption)
+                        .bold()
+                    
                     HStack {
                         Text(String(ticker.tradePrice.formatted(.number)))
                             .bold()
