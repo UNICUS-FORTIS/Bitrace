@@ -69,7 +69,7 @@ struct BannerView : View {
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding()
+        .padding(.horizontal)
     }
     
     
