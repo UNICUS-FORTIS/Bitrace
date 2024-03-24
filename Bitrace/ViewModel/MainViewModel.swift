@@ -65,7 +65,11 @@ final class MainViewModel: ObservableObject {
     
     func fetchStoredMarketTickers() {
         var markets: [String] = []
-        task.forEach { markets.append($0.marketCode) }
+        if task.count > 0 {
+            task.forEach { markets.append($0.marketCode) }
+        } else {
+            self.storedMarketTickers = []
+        }
         let combined = markets.joined(separator: ",")
         print("컴바인드", combined)
         networkService.fetchRequest(endpoint: .ticker(market: combined),
