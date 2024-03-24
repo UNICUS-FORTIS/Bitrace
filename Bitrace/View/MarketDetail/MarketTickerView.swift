@@ -19,94 +19,107 @@ struct MarketTickerView: View {
     @Namespace private var animation
     
     var body: some View {
-        VStack {
-            HStack {
-                Text(market.koreanName)
-                    .font(.title)
-                    .bold()
-                
-                Text(market.market)
-                    .font(.caption)
-                    .bold()
-                    .padding(.top)
-                
-                Spacer()
-            }
-            .frame(maxHeight: 50)
-            .foregroundStyle(.main)
-                        
-            VStack(alignment: .leading) {
+        GeometryReader { geometry in
+            VStack {
                 HStack {
-                    Text("고가")
-                        .font(.caption)
-                    Text(ticker.high)
-                        .font(.caption)
-                    Spacer()
-                }
-
-                HStack {
-                    Text("저가")
-                        .font(.caption)
-                    Text(ticker.low)
-                        .font(.caption)
-                    Spacer()
-                }
-            }
-            
-            Divider()
-            
-            HStack {
-                Text(ticker.currentPrice)
-                    .font(.title)
-                    .bold()
-                    .foregroundStyle(priceColor())
-                
-                Spacer()
-
-                VStack(alignment: .center) {
-                    HStack {
-                        Text(ticker.changePrice)
-                            .font(.caption)
-                            .foregroundStyle(priceColor())
-                    }
+                    Text(market.koreanName)
+                        .font(.title)
+                        .bold()
                     
-                    Divider()
-
-                    HStack {
-                        Text(ticker.changePercentage)
-                            .font(.caption)
-                            .foregroundStyle(priceColor())
+                    Text(market.market)
+                        .font(.caption)
+                        .bold()
+                        .padding(.top)
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        RealmRepository.shared.toggleDatabaseSave(market: market)
+                    }) {
+                        Image(.favorite)
+                            .resizable()
+                            .foregroundStyle(bookmarkColor(market: market))
+                            .frame(maxWidth: 25, maxHeight: 25)
+                            .padding(.trailing)
                     }
                 }
-                .frame(maxWidth: UIScreen.main.bounds.width / 3)
-            }
-            
-            ScrollView {
-                VStack {
-                    chartTabMenu()
-                    ChartView()
-                        .frame(width: .infinity, height: UIScreen.main.bounds.height * 0.3)
-                        .onAppear {
-                            chart.fetchCandle(item: market, unit: selectedUnit.unitRawValue)
+                .frame(maxHeight: 50)
+                .foregroundStyle(.main)
+                            
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("고가")
+                            .font(.caption)
+                        Text(ticker.high)
+                            .font(.caption)
+                        Spacer()
+                    }
+
+                    HStack {
+                        Text("저가")
+                            .font(.caption)
+                        Text(ticker.low)
+                            .font(.caption)
+                        Spacer()
+                    }
+                }
+                
+                Divider()
+                
+                HStack {
+                    Text(ticker.currentPrice)
+                        .font(.title)
+                        .bold()
+                        .foregroundStyle(priceColor())
+                    
+                    Spacer()
+
+                    VStack(alignment: .center) {
+                        HStack {
+                            Text(ticker.changePrice)
+                                .font(.caption)
+                                .foregroundStyle(priceColor())
                         }
-                        .padding(.bottom, 12)
-                    
-                    orderBookTabMenu()
-                    OrderBookView(selectedOrder: $selectedOrder)
-                        .frame(width: .infinity, height: UIScreen.main.bounds.height * 0.5)
+                        
+                        Divider()
+
+                        HStack {
+                            Text(ticker.changePercentage)
+                                .font(.caption)
+                                .foregroundStyle(priceColor())
+                        }
+                    }
+                    .frame(maxWidth: UIScreen.main.bounds.width / 3)
                 }
+                
+                ScrollView {
+                    VStack {
+                        chartTabMenu()
+                        ChartView()
+                            .frame(height: geometry.size.height * 0.3)
+                            .onAppear {
+                                chart.fetchCandle(item: market, unit: selectedUnit.unitRawValue)
+                            }
+                            .padding(.bottom, 12)
+                        
+                        orderBookTabMenu()
+                        OrderBookView(selectedOrder: $selectedOrder)
+                            .frame(height: geometry.size.height * 0.5)
+                    }
+                }
+                Spacer()
             }
-            Spacer()
-        }
-        .padding()
-        .scrollIndicators(.hidden)
-        .onAppear {
-            ticker.startSocket(market: market)
-            order.startSocket(market: market)
-        }
-        .onDisappear {
-            ticker.closeWebSocket()
-            order.closeWebSocket()
+            .padding()
+            .scrollIndicators(.hidden)
+            .onAppear {
+                ticker.startSocket(market: market)
+                order.startSocket(market: market)
+                RealmRepository.shared.checkRealmDirectory()
+            }
+            .onDisappear {
+                ticker.closeWebSocket()
+                order.closeWebSocket()
+            }
         }
     }
     
@@ -171,6 +184,14 @@ struct MarketTickerView: View {
             return .blue
         default:
             return .black
+        }
+    }
+    
+    func bookmarkColor(market: CoinMarketModel) -> Color {
+        if RealmRepository.shared.checkStoredMarket(market: market) {
+            return .red
+        } else {
+            return .gray
         }
     }
 }

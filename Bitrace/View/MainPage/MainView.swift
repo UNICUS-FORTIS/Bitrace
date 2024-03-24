@@ -26,60 +26,75 @@ struct MainView: View {
     
     @ViewBuilder
     private var contentView: some View {
-        VStack {
-            HStack {
-                Text("Bitrace")
-                    .font(.largeTitle)
-                    .bold()
-                    .padding(.leading)
-                    .foregroundStyle(.main)
-                
-                Spacer()
-                
-                Button(action: {
-                    isSearching.toggle()
-                }) {
-                    Image(.searchIcon)
-                        .resizable()
+        GeometryReader { proxy in
+            VStack {
+                HStack {
+                    Text("Bitrace")
+                        .font(.largeTitle)
+                        .bold()
+                        .padding(.leading)
                         .foregroundStyle(.main)
-                        .frame(maxWidth: 25, maxHeight: 25)
-                        .padding(.trailing)
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        isSearching.toggle()
+                    }) {
+                        Image(.searchIcon)
+                            .resizable()
+                            .foregroundStyle(.main)
+                            .frame(maxWidth: 25, maxHeight: 25)
+                            .padding(.trailing)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .frame(maxHeight: 30)
+                .padding(.top, 12)
+                
+                ScrollView {
+                    BannerView(viewModel: self.viewModel)
+                        .padding(.vertical)
+                        .frame(height: 200)
+                        .onAppear {
+                            viewModel.fetchTicker(market: "KRW-BTC")
+                        }
+                }
+                .frame(height: 200)
+                .refreshable {
+                    viewModel.fetchTicker(market: "KRW-BTC")
+                }
+                
+                ScrollView(.vertical) {
+                    Text("Favorite")
+                        .font(.title)
+                        .bold()
+                        .frame(maxWidth: .infinity,
+                               maxHeight: 20,
+                               alignment: .leading)
+                        .padding(.horizontal)
+                        .padding(.bottom, 6)
+                    
+                    
+                    FavoriteView(viewModel: self.viewModel)
+                        .frame(height: proxy.size.height * 0.15)
+                        .onAppear {
+                            viewModel.fetchStoredMarketTickers()
+                        }
+                    
+                    Text("Market")
+                        .font(.title)
+                        .bold()
+                        .frame(maxWidth: .infinity,
+                               maxHeight: 20,
+                               alignment: .leading)
+                        .padding(.horizontal)
+                        .padding(.bottom, 6)
+                    
+                    MarketListView(viewModel: self.viewModel)
                 }
             }
-            .frame(maxWidth: .infinity)
-            .frame(maxHeight: 30)
-            .padding(.top, 12)
-            
-            ScrollView {
-                BannerView(viewModel: self.viewModel)
-                    .frame(height: 200)
-                    .padding(.vertical)
-                    .onAppear {
-                        viewModel.fetchTicker(market: "KRW-BTC")
-                    }
-            }
-            .frame(height: 230)
-            .refreshable {
-                viewModel.fetchTicker(market: "KRW-BTC")
-            }
-            
-            Text("Market")
-                .font(.title)
-                .bold()
-                .frame(maxWidth: .infinity,
-                       maxHeight: 20,
-                       alignment: .leading)
-                .padding(.horizontal)
-                .padding(.bottom, 6)
-            
-            ScrollView {
-                MarketListView(viewModel: self.viewModel)
-                    .onAppear {
-                        viewModel.fetchCoinMarket()
-                    }
-            }
+            .scrollIndicators(.hidden)
         }
-        .scrollIndicators(.hidden)
     }
 }
 
@@ -87,3 +102,4 @@ struct MainView: View {
 #Preview {
     MainView()
 }
+
