@@ -20,6 +20,9 @@ struct MainView: View {
             } else {
                 contentView
                     .navigationBarHidden(true)
+                    .onAppear {
+                        viewModel.fetchStoredMarketTickers()
+                    }
             }
         }
     }
@@ -53,8 +56,7 @@ struct MainView: View {
                 
                 ScrollView {
                     BannerView(viewModel: self.viewModel)
-                        .padding(.vertical)
-                        .frame(height: 200)
+                        .shadow(color: .black.opacity(0.4), radius: 5, x: 5, y: 5)
                         .onAppear {
                             viewModel.fetchTicker(market: "KRW-BTC")
                         }
@@ -71,15 +73,15 @@ struct MainView: View {
                         .frame(maxWidth: .infinity,
                                maxHeight: 20,
                                alignment: .leading)
-                        .padding(.horizontal)
-                        .padding(.bottom, 6)
+                        .padding(.leading)
                     
-                    
-                    FavoriteView(viewModel: self.viewModel)
-                        .frame(height: proxy.size.height * 0.15)
-                        .onAppear {
-                            viewModel.fetchStoredMarketTickers()
-                        }
+                    if viewModel.storedMarketTickers.isEmpty {
+                        EmptyView()
+                    } else {
+                        FavoriteView(viewModel: self.viewModel)
+                            .frame(height: proxy.size.height * 0.15)
+                            .shadow(color: .black.opacity(0.4), radius: 5, x: 5, y: 5)
+                    }
                     
                     Text("Market")
                         .font(.title)
