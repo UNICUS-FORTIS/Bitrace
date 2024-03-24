@@ -12,12 +12,12 @@ typealias Ticker = [TickerResponse]
 struct TickerResponse: Decodable {
     let market, tradeDate, tradeTime, tradeDateKst: String
     let tradeTimeKst: String
-    let tradeTimestamp, openingPrice, highPrice, lowPrice: Int
-    let tradePrice, prevClosingPrice: Int
+    let tradeTimestamp, openingPrice, highPrice, lowPrice: Double
+    let tradePrice, prevClosingPrice: Double
     let change: String
-    let changePrice: Int
+    let changePrice: Double
     let changeRate: Double
-    let signedChangePrice: Int
+    let signedChangePrice: Double
     let signedChangeRate: Double
     let timestamp: Int
 
