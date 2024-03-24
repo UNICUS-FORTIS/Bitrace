@@ -26,17 +26,16 @@ struct SearchView: View {
                                         MarketTickerView(market: item,
                                                          ticker: marketViewModel,
                                                          chart: chartViewModel,
-                                                         order: orderBookViewModel)) {
+                                                         order: orderBookViewModel)
+                                            .navigationBarTitleDisplayMode(.inline)) {
                             MarketItemView(item: item)
                         }
                     }
                 }
                 .padding()
-                .navigationBarTitleDisplayMode(.inline)
             }
         }
         .searchable(text: $searchTerm, isPresented: $isSearching)
-        .navigationTitle("Market Search")
         .scrollIndicators(.hidden)
     }
     
