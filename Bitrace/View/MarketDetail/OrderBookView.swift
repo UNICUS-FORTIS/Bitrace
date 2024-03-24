@@ -11,16 +11,15 @@ struct OrderBookView: View {
     
     @ObservedObject private var viewModel = OrderBookViewModel.shared
     @Binding var selectedOrder: OrderBookDivision
-
+    
     var body: some View {
-        ScrollView {
-            GeometryReader { proxy in
-                let graphWidth = proxy.size.width * 0.7
-                VStack {
+        GeometryReader { proxy in
+            let graphWidth = proxy.size.width * 0.7
+                LazyVStack {
                     ForEach(assignOrderBook(), id: \.id) { item in
                         HStack {
-                            
                             Text(item.price.formatted())
+                                .font(.caption)
                                 .frame(width: proxy.size.width * 0.3)
                                 .foregroundStyle(makeChartColor())
                                 .bold()
@@ -36,15 +35,15 @@ struct OrderBookView: View {
                                            alignment: .leading)
                                 
                                 Text(item.size.formatted(.number.precision(.fractionLength(3))))
+                                    .font(.caption)
                                     .frame(width: graphWidth)
                             }
                             .frame(maxWidth: .infinity)
                             .background(makeChartColor().opacity(0.4))
                         }
-                        .frame(height: 40)
+                        .frame(height: 30)
                     }
                 }
-            }
         }
     }
     

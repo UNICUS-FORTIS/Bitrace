@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MarketTickerView: View {
     
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State var market: CoinMarketModel
     @State var selectedUnit: ChartUnitDivision = .oneMinute
     @State var selectedOrder: OrderBookDivision = .ask
@@ -45,7 +46,7 @@ struct MarketTickerView: View {
                 }
                 .frame(maxHeight: 50)
                 .foregroundStyle(.main)
-                            
+                
                 VStack(alignment: .leading) {
                     HStack {
                         Text("고가")
@@ -54,7 +55,7 @@ struct MarketTickerView: View {
                             .font(.caption)
                         Spacer()
                     }
-
+                    
                     HStack {
                         Text("저가")
                             .font(.caption)
@@ -73,7 +74,7 @@ struct MarketTickerView: View {
                         .foregroundStyle(priceColor())
                     
                     Spacer()
-
+                    
                     VStack(alignment: .center) {
                         HStack {
                             Text(ticker.changePrice)
@@ -82,44 +83,54 @@ struct MarketTickerView: View {
                         }
                         
                         Divider()
-
+                        
                         HStack {
                             Text(ticker.changePercentage)
                                 .font(.caption)
                                 .foregroundStyle(priceColor())
                         }
                     }
-                    .frame(maxWidth: UIScreen.main.bounds.width / 3)
+                    .frame(maxWidth: geometry.size.width / 3)
                 }
                 
-                ScrollView {
-                    VStack {
-                        chartTabMenu()
-                        ChartView()
-                            .frame(height: geometry.size.height * 0.3)
-                            .onAppear {
-                                chart.fetchCandle(item: market, unit: selectedUnit.unitRawValue)
-                            }
-                            .padding(.bottom, 12)
-                        
-                        orderBookTabMenu()
-                        OrderBookView(selectedOrder: $selectedOrder)
-                            .frame(height: geometry.size.height * 0.5)
-                    }
+                ScrollView(.vertical) {
+                    chartTabMenu()
+                    ChartView()
+                        .frame(height: geometry.size.height * 0.3)
+                        .onAppear {
+                            chart.fetchCandle(item: market, unit: selectedUnit.unitRawValue)
+                        }
+                        .padding(.bottom, 12)
+                    
+                    orderBookTabMenu()
+                    OrderBookView(selectedOrder: $selectedOrder)
+                        .frame(minHeight: geometry.size.height,
+                               maxHeight:.infinity)
                 }
-                Spacer()
             }
-            .padding()
+            .padding(.horizontal)
             .scrollIndicators(.hidden)
+            .navigationBarBackButtonHidden()
+            .navigationBarItems(leading: backButton)
             .onAppear {
                 ticker.startSocket(market: market)
                 order.startSocket(market: market)
-                RealmRepository.shared.checkRealmDirectory()
             }
             .onDisappear {
                 ticker.closeWebSocket()
                 order.closeWebSocket()
             }
+        }
+    }
+    
+    var backButton : some View {
+        Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+        }) {
+            Image(.chevronLeft)
+                .resizable()
+                .foregroundStyle(.main)
+                .frame(width: 14, height: 20)
         }
     }
     
