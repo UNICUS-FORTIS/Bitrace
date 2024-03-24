@@ -37,16 +37,16 @@ final class ChartViewModel:ObservableObject {
             let sorted = values.sorted { $0.candleDateTimeKst < $1.candleDateTimeKst }
             self?.candleData = sorted.map {
                 CandleModel(time: String($0.candleDateTimeKst).dateFormat(),
-                            high: Int($0.highPrice),
-                            low: Int($0.lowPrice),
-                            openPrice: Int($0.openingPrice),
-                            tradePrice: Int($0.tradePrice))
+                            high: Double($0.highPrice),
+                            low: Double($0.lowPrice),
+                            openPrice: Double($0.openingPrice),
+                            tradePrice: Double($0.tradePrice))
             }
         }
         .store(in: &cancellable)
     }
     
-    func findMinMaxValues() -> ClosedRange<Int>? {
+    func findMinMaxValues() -> ClosedRange<Double>? {
         guard let firstModel = candleData.first else {
             return nil
         }
